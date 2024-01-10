@@ -94,7 +94,7 @@ async def get_population(location):
         except (KeyError, IndexError):
             return None
 
-async def normalizeInput(transaction:Transaction,location):
+def normalizeInput(transaction:Transaction,location):
     noramlizedInput=transaction.to_dict()
     noramlizedInput['transaction']=get_time_period()
     noramlizedInput['age']=categorize_age(noramlizedInput['age'])
@@ -119,10 +119,10 @@ async def get_user_location(ip: str = Depends(get_client_ip)):
 @app.post("/detect/")
 async def detect(transaction: Transaction,location: dict = Depends(get_user_location)):
     transactionNormalized=normalizeInput(transaction,location)
-    return transactionNormalized['population']
-    # for _, rule in rules.iterrows():
-        # if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
-            # return {"result": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"}
+    # return transactionNormalized['population']
+    for _, rule in rules.iterrows():
+        if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
+            return {"result": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"}
             
 
     return {"result": "🌟 Your transactions are as clean as a whistle.🎩💸"}
