@@ -102,8 +102,7 @@ async def detect(transaction: Transaction,location: dict = Depends(get_user_loca
     transactionNormalized=normalizeInput(transaction)
     for _, rule in rules.iterrows():
         if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
-            return {"result": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"}
-            # return location
+            # return {"result": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"}
+            return location
 
     return {"result": "🌟 Your transactions are as clean as a whistle.🎩💸"}
-uvicorn.run(app)
