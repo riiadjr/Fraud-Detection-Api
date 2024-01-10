@@ -1,5 +1,5 @@
 import pandas as pd
-import uvicorn
+import geopy.distance
 from fastapi import FastAPI, Request,HTTPException
 from pydantic import BaseModel
 from datetime import datetime
@@ -74,14 +74,33 @@ def categorize_age(age):
         return "middle"
     else:
         return "young"
+async def get_population(location):
+    base_url = "http://api.geonames.org/findNearbyPlaceNameJSON"
+    location=location.loc.split(',')
+    params = {
+        "lat": location[0],
+        "lng": location[1],
+        "username": 'dtctv129',
+        "style": "full",
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.get(base_url, params=params)
+        data = response.json()
 
-def normalizeInput(transaction:Transaction):
+        # Extract population information
+        try:
+            population = data["geonames"][0]["population"]
+            return population
+        except (KeyError, IndexError):
+            return None
+
+def normalizeInput(transaction:Transaction,location):
     noramlizedInput=transaction.to_dict()
     noramlizedInput['transaction']=get_time_period()
     noramlizedInput['age']=categorize_age(noramlizedInput['age'])
     noramlizedInput['amount']=categorize_amount(noramlizedInput['amount'])
     noramlizedInput['population']=categorize_population(noramlizedInput['population'])
-    noramlizedInput['distance']=categorize_distance(noramlizedInput['distance'])
+    noramlizedInput['distance']=categorize_distance(geopy.distance.geodesic(tuple(location["loc"].split(',')), (35.6991,-0.6359)).miles)
     return noramlizedInput
 # Getting User Location 
 async def get_client_ip(request: Request):
@@ -99,10 +118,10 @@ async def get_user_location(ip: str = Depends(get_client_ip)):
 # Fraud Detection End-Point
 @app.post("/detect/")
 async def detect(transaction: Transaction,location: dict = Depends(get_user_location)):
-    transactionNormalized=normalizeInput(transaction)
+    transactionNormalized=normalizeInput(transaction,location)
     for _, rule in rules.iterrows():
         if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
-            # return {"result": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"}
-            return location
+            return {"result": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"}
+            # return location
 
     return {"result": "🌟 Your transactions are as clean as a whistle.🎩💸"}
