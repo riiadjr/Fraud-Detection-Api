@@ -4,9 +4,6 @@ from fastapi import FastAPI, Request,HTTPException
 from pydantic import BaseModel
 from datetime import datetime
 from fastapi import FastAPI, Depends, HTTPException
-from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
-from fastapi.openapi.models import OAuthFlowAuthorizationCode
-from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import httpx
 import json
@@ -15,15 +12,6 @@ load_dotenv()
 
 app = FastAPI()
 
-
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"],  # You can restrict to specific headers if needed
-)
 # Load rules from the CSV file using pandas
 rules = pd.read_csv('rules_simple.csv')
 # Transaction Model
