@@ -115,9 +115,9 @@ async def get_user_location(ip: str = Depends(get_client_ip)):
             raise HTTPException(status_code=response.status_code, detail="Failed to fetch location")
 
 # Fraud Detection End-Point
-@app.route("/detect/", methods=["POST", "OPTIONS"])
+@app.post("/detect/")
 async def detect(transaction: Transaction,location: dict = Depends(get_user_location)):
-    transactionNormalized= normalizeInput(transaction,location)
+    transactionNormalized= await normalizeInput(transaction,location)
     for _, rule in rules.iterrows():
         if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
             return {
