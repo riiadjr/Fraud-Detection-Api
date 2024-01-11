@@ -118,13 +118,12 @@ async def get_user_location(ip: str = Depends(get_client_ip)):
 @app.post("/detect/")
 async def detect(transaction: Transaction,location: dict = Depends(get_user_location)):
     transactionNormalized=await normalizeInput(transaction,location)
-    # return transactionNormalized['population']
     for _, rule in rules.iterrows():
         if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
             return {
                 "fraud":"true",
                 "message": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼",
-                "transaction":{transactionNormalized}
+                "transaction":transactionNormalized
                 }
             
            
@@ -133,7 +132,7 @@ async def detect(transaction: Transaction,location: dict = Depends(get_user_loca
     return {
                 "fraud":"false",
                 "message": "🌟 Your transactions are as clean as a whistle.🎩💸",
-                "transaction":{transactionNormalized}
+                "transaction":transactionNormalized
                 }
 
 @app.get("/")
