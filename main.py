@@ -86,15 +86,15 @@ async def get_city_opendata(city, country):
             out = dct['records'][0]['fields']
             return out['population']
         else:
-            raise HTTPException(status_code=response.status_code, detail="Failed to fetch location")
+            raise HTTPException(status_code=res.status_code, detail="Failed to fetch location")
        
 
-def normalizeInput(transaction:Transaction,location):
+async def normalizeInput(transaction:Transaction,location):
     noramlizedInput=transaction.to_dict()
     noramlizedInput['transaction']=get_time_period()
     noramlizedInput['age']=categorize_age(noramlizedInput['age'])
     noramlizedInput['amount']=categorize_amount(noramlizedInput['amount'])
-    noramlizedInput['population']=categorize_population(get_city_opendata(location['city'],location['country']))
+    noramlizedInput['population']=categorize_population(await get_city_opendata(location['city'],location['country']))
     noramlizedInput['distance']=categorize_distance(geopy.distance.geodesic(tuple(location["loc"].split(',')), (35.6991,-0.6359)).miles)
     return noramlizedInput
 # Getting User Location 
