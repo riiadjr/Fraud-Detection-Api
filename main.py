@@ -117,8 +117,7 @@ async def get_user_location(ip: str = Depends(get_client_ip)):
 # Fraud Detection End-Point
 @app.route("/detect/", methods=["POST", "OPTIONS"])
 async def detect(transaction: Transaction,location: dict = Depends(get_user_location)):
-    await location
-    transactionNormalized=await normalizeInput(transaction,location)
+    transactionNormalized= normalizeInput(transaction,location)
     for _, rule in rules.iterrows():
         if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
             return {
