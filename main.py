@@ -77,16 +77,20 @@ def categorize_age(age):
         return "young"
 # def get_population(location):
 async def get_city_opendata(city, country):
-    tmp = 'https://public.opendatasoft.com/api/records/1.0/search/?dataset=worldcitiespop&q=%s&sort=population&facet=country&refine.country=%s'
-    cmd = tmp % (city, country)
+    url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records"
+    params = {
+        "select": "population",
+        "where": f'name="{city}" and country_code="{country}"',
+        "limit": 20,
+    }
     async with httpx.AsyncClient() as client:
-        res = await client.get(cmd)
+        res = await client.get(url,params)
         if res.status_code == 200:
             dct = json.loads(res.content)
             out = dct['records'][0]['fields']
             return out['population']
         else:
-            raise HTTPException(status_code=res.status_code, detail="Failed to fetch location")
+            raise HTTPException(status_code=res.status_code, detail="Failed to fetch population")
        
 
 async def normalizeInput(transaction:Transaction,location):
