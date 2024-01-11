@@ -30,12 +30,12 @@ app.add_middleware(
 rules = pd.read_csv('rules_simple.csv')
 # Transaction Model
 class Transaction(BaseModel):
-    distance:int
+    distance:int =None
     age: int
     gender:str
     category: str 
     amount: int
-    population: int
+    population: int =None
     def to_dict(self):
         return dict(self.__dict__)
 # Input Normalization Methods
