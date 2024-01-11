@@ -87,8 +87,8 @@ async def get_city_opendata(city, country):
         res = await client.get(url,params=params)
         if res.status_code == 200:
             dct = json.loads(res.content)
-            out = dct['records'][0]['fields']
-            return out['population']
+            out = dct['results'][0]['population']
+            return out
         else:
             raise HTTPException(status_code=res.status_code, detail="Failed to fetch population")
        
