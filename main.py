@@ -5,13 +5,23 @@ from pydantic import BaseModel
 from datetime import datetime
 from fastapi import FastAPI, Depends, HTTPException
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import json
+
 
 load_dotenv()
 
 app = FastAPI()
+origins = ["*"]  # Allow all origins, you can adjust this based on your needs
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Load rules from the CSV file using pandas
 rules = pd.read_csv('rules_simple.csv')
 # Transaction Model
@@ -105,7 +115,7 @@ async def get_user_location(ip: str = Depends(get_client_ip)):
             raise HTTPException(status_code=response.status_code, detail="Failed to fetch location")
 
 # Fraud Detection End-Point
-@app.post("/detect/")
+@app.post("/detect/", methods=[ "POST", "OPTIONS"])
 async def detect(transaction: Transaction,location: dict = Depends(get_user_location)):
     transactionNormalized=await normalizeInput(transaction,location)
     for _, rule in rules.iterrows():
