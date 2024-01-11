@@ -81,9 +81,13 @@ async def get_city_opendata(city, country):
     cmd = tmp % (city, country)
     async with httpx.AsyncClient() as client:
         res = await client.get(cmd)
-    dct = json.loads(res.content)
-    out = dct['records'][0]['fields']
-    return out['population']
+        if res.status_code == 200:
+            dct = json.loads(res.content)
+            out = dct['records'][0]['fields']
+            return out['population']
+        else:
+            raise HTTPException(status_code=response.status_code, detail="Failed to fetch location")
+       
 
 def normalizeInput(transaction:Transaction,location):
     noramlizedInput=transaction.to_dict()
