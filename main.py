@@ -130,9 +130,11 @@ async def detect(transaction: Transaction,location: dict = Depends(get_user_loca
                 "message": "🌟 Your transactions are as clean as a whistle.🎩💸",
                 "transaction":transactionNormalized
                 }
+    
 @app.options("/detect/")
 async def options_detect(request: Request):
     return {}
+
 @app.get("/")
 def read_root():
     return {"message": "🕵️‍♂️ Welcome to the Fraud Buster API! We're on a mission to sniff out tricksters and keep your transactions as clean as a freshly laundered detective's coat. Let's catch those sneaky digits! 💳🔍"}
