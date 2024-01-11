@@ -9,6 +9,7 @@ from fastapi.openapi.models import OAuthFlowAuthorizationCode
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import httpx
+import json
 
 load_dotenv()
 
@@ -74,32 +75,22 @@ def categorize_age(age):
         return "middle"
     else:
         return "young"
-async def get_population(location):
-    base_url = "http://api.geonames.org/findNearbyPlaceNameJSON"
-    location=location['loc'].split(',')
-    params = {
-        "lat": location[0],
-        "lng": location[1],
-        "username": 'dtctv129',
-        "style": "full",
-    }
+# def get_population(location):
+async def get_city_opendata(city, country):
+    tmp = 'https://public.opendatasoft.com/api/records/1.0/search/?dataset=worldcitiespop&q=%s&sort=population&facet=country&refine.country=%s'
+    cmd = tmp % (city, country)
     async with httpx.AsyncClient() as client:
-        response = await client.get(base_url, params=params)
-        data = response.json()
-
-        # Extract population information
-        try:
-            population = data["geonames"][0]["population"]
-            return population
-        except (KeyError, IndexError):
-            return None
+        res = await client.get(cmd)
+    dct = json.loads(res.content)
+    out = dct['records'][0]['fields']
+    return out['population']
 
 def normalizeInput(transaction:Transaction,location):
     noramlizedInput=transaction.to_dict()
     noramlizedInput['transaction']=get_time_period()
     noramlizedInput['age']=categorize_age(noramlizedInput['age'])
     noramlizedInput['amount']=categorize_amount(noramlizedInput['amount'])
-    noramlizedInput['population']=categorize_population(get_population(location))
+    # noramlizedInput['population']=categorize_population(get_population(location))
     noramlizedInput['distance']=categorize_distance(geopy.distance.geodesic(tuple(location["loc"].split(',')), (35.6991,-0.6359)).miles)
     return noramlizedInput
 # Getting User Location 
@@ -122,7 +113,13 @@ async def detect(transaction: Transaction,location: dict = Depends(get_user_loca
     # return transactionNormalized['population']
     for _, rule in rules.iterrows():
         if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
-            return {"result": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"}
+            return {
+                "fraud":"true",
+                "message": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"+location
+                }
             
 
-    return {"result": "🌟 Your transactions are as clean as a whistle.🎩💸"}
+    return {
+                "fraud":"true",
+                "message": "🌟 Your transactions are as clean as a whistle.🎩💸"
+                }
