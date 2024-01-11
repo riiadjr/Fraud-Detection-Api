@@ -90,7 +90,7 @@ def normalizeInput(transaction:Transaction,location):
     noramlizedInput['transaction']=get_time_period()
     noramlizedInput['age']=categorize_age(noramlizedInput['age'])
     noramlizedInput['amount']=categorize_amount(noramlizedInput['amount'])
-    # noramlizedInput['population']=categorize_population(get_population(location))
+    noramlizedInput['population']=categorize_population(get_city_opendata(location['city'],location['country']))
     noramlizedInput['distance']=categorize_distance(geopy.distance.geodesic(tuple(location["loc"].split(',')), (35.6991,-0.6359)).miles)
     return noramlizedInput
 # Getting User Location 
@@ -117,7 +117,7 @@ async def detect(transaction: Transaction,location: dict = Depends(get_user_loca
             #     "fraud":"true",
             #     "message": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"
             #     }
-            return location
+            return transactionNormalized['population']
             
 
     return {
