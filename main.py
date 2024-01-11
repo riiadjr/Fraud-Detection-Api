@@ -84,7 +84,7 @@ async def get_city_opendata(city, country):
         "limit": 20,
     }
     async with httpx.AsyncClient() as client:
-        res = await client.get(url,params)
+        res = await client.get(url,params=params)
         if res.status_code == 200:
             dct = json.loads(res.content)
             out = dct['records'][0]['fields']
