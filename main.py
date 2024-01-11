@@ -29,6 +29,9 @@ app.add_middleware(
 # Load rules from the CSV file using pandas
 rules = pd.read_csv('rules_simple.csv')
 # Transaction Model
+class MerchantLocation(BaseModel):
+    longitude: float
+    latitude: float
 class Transaction(BaseModel):
     distance:int =None
     age: int
@@ -36,7 +39,7 @@ class Transaction(BaseModel):
     category: str 
     amount: int
     population: int =None
-    merchant : dict
+    merchant : MerchantLocation
     def to_dict(self):
         return dict(self.__dict__)
 # Input Normalization Methods
