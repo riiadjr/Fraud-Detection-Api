@@ -121,17 +121,19 @@ async def detect(transaction: Transaction,location: dict = Depends(get_user_loca
     # return transactionNormalized['population']
     for _, rule in rules.iterrows():
         if all(pd.isna(v) or transactionNormalized[k] == v for k, v in rule.items()):
-            # return {
-            #     "fraud":"true",
-            #     "message": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼"
-            #     }
-            return transactionNormalized['population']
+            return {
+                "fraud":"true",
+                "message": "🚨 Fraud Alert! 🚨 Whoa there, Sherlock! We just caught a sneaky attempt at mischief.🕵️‍♂️💼",
+                "transaction":{transactionNormalized}
+                }
+            
            
             
 
     return {
                 "fraud":"false",
-                "message": "🌟 Your transactions are as clean as a whistle.🎩💸"
+                "message": "🌟 Your transactions are as clean as a whistle.🎩💸",
+                "transaction":{transactionNormalized}
                 }
 
 @app.get("/")
