@@ -75,7 +75,7 @@ def categorize_age(age):
         return "middle"
     else:
         return "young"
-# def get_population(location):
+
 async def get_city_opendata(city, country):
     url = "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records"
     params = {
