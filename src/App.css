@@ -1,38 +1,178 @@
-.App {
-  text-align: center;
+/* App.css */
+body {
+  font-family: 'Roboto', sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.popup-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.popup {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  flex-wrap: wrap;
+}
+.popup .popup-content {
+  max-width: 700px;
+  text-align: center;
+}
+
+.popupp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  
+  /* padding: 20px; */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+ 
+
+}
+.popupp .popup-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  text-align: center;
+  width: 80%;
+  padding: 5%;
+
+
+}
+.popupp .popup-content p{
+ font-weight: 700;
+  font-size: 20px;
+  line-height: 1.25rem;
+ color: rgba(71,75,197,1);
+}
+
+.popup-content .line_1{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+.popup-content .line{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+.popup-content .line_1 label{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin: 10px;
+}
+
+/* .popup button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #007BFF;
   color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+} */
+
+.popup button:hover {
+  background-color: #0056b3;
 }
 
-.App-link {
-  color: #61dafb;
+/* Optional: Customize the appearance of input fields */
+.popup input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+.popup select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Hover Effect */
+.popup  input:hover {
+  border-color: #66afe9;
 }
+
+/* Focus Effect */
+.popup input:focus {
+  border-color: #4d90fe;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
+.gender_input{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+ .gender_input .gender{
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction:row;
+  justify-content: space-around;
+  width: 100px;
+}
+.gender_input .gender input{
+  width: 15%;
+  margin-top: 8px;
+}
+.gender_input .gender:hover {
+  border-color: #66afe9;
+}
+
+/* Focus Effect */
+.gender_input .gender input:checked{
+  border-color: #4d90fe;
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+}
+
+/* Button Styles */
+button {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid #3498db;
+  color: #3498db;
+  background-color: #fff;
+  border-radius: 5px;
+  transition: background-color 0.5s, color 0.5s, border-color 0.5s;
+}
+
+button:hover {
+  background-color: #3498db;
+  color: #fff;
+  border-color: #fff;
+}
+
